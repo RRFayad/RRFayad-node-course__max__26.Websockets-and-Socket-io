@@ -4,3 +4,56 @@
     - A protocol that allow us to build real-time web services
 
     - We are gonna see what this means, why to use it and how
+
+407. What Are Websockets & Why Would You Use Them?
+
+    - Status Quo - How what we created up to now worklike?
+        - Client
+            Send a request to the server
+            Get a Response from the server
+    
+        - This is like a 'Pull' method, where the client must act, sending a request, to receive a response from the server (and it's commonly enough)
+
+    - But what if we want the server to "Push" information, without a request?
+         -For example, a chat application, where the receiver will not send a request to check if there are incoming messages?
+         - We want to inform a client when something change on the server
+
+    - Then we can use WebSockets instead of Http
+        - WebSocket are estabilished via Http, but they are different as allow the server to push data
+
+    - We can use both together in the same Node App
+
+408. Websocket Solutions - An Overview
+
+    - Web Sockets are the concept, Socket.io
+
+409. Setting Up Socket.io on the Server
+    - We have to add it in both server and in the client
+
+    - On the server project:
+        npm install socket.io
+
+    - On the server app:
+        app.listen(8080);
+            const io = require("socket.io")(server, {
+                cors: {
+                    origin: "http://localhost:3000",
+                    methods: ["GET", "POST"],
+                },
+            });
+            io.on("connection", (socket) => {       // This is an event listener to the connection event
+            console.log("Client Connected");
+        });
+
+    * Now we gotta create the socket io connection in the client side
+
+410. Establishing a Connection From the Client
+    - On the client project:
+        - npm install socket.io-client
+
+        - *import it in the file we want the connection
+            import openSocket from "socket.io-client";
+            openSocket("http://localhost:8080");
+            
+            When the component mounts (componentDidMount or useEffect):
+        -     openSocket("http://localhost:8080");

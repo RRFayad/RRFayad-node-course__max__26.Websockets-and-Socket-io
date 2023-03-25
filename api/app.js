@@ -66,6 +66,15 @@ mongoose
     `mongodb+srv://test-user__node-course:${process.env.MONGODB_PASSWORD}@cluster0.comn0rn.mongodb.net/REST__API--messages`
   )
   .then((result) => {
-    app.listen(8080);
+    const server = app.listen(8080);
+    const io = require("socket.io")(server, {
+      cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+      },
+    });
+    io.on("connection", (socket) => {
+      console.log("Client Connected");
+    });
   })
   .catch((err) => console.log(err));
