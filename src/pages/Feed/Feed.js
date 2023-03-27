@@ -39,6 +39,20 @@ class Feed extends Component {
       })
       .catch(this.catchError);
 
+    addPost = (post) => {
+      this.setState((prevState) => {
+        const updatedPosts = [...prevState.posts];
+        if (prevState.postPage === 1) {
+          updatedPosts.pop();
+          updatedPosts.unshift(post);
+        }
+        return {
+          posts: updatedPosts,
+          totalPosts: prevState.totalPosts++,
+        };
+      });
+    };
+
     this.loadPosts();
     openSocket("http://localhost:8080");
   }
