@@ -63,7 +63,7 @@
         - If user A creates a new post, user B could see it instantly!
 
     1. In the front-end:
-        - We created a addPost method, with this weird syntax (not declaring const)
+        - We created a addPost method inside a class (that's why the weird syntax)
         
             addPost = (post) => {
             this.setState((prevState) => {
@@ -82,5 +82,35 @@
     2. In the api:
     
     2.1. We created an socket.js file;
-        - Called it in the app.
+        * Have to set the Cors
+    
+    2.2. Called it in the app.
+            const server = app.listen(8080);
+                const io = require("./socket").init(server, {
+                    cors: {
+                        origin: "http://localhost:3000",
+                        methods: ["GET", "POST"],
+                    },
+                });
+                io.on("connection", (socket) => {
+                console.log("Client Connected");
+            });
+
+413. Synchronizing POST Additions
+    
+    - In the create post controller, when we create a post, we will emit an event, that we called posts, and set a payload with it;
+        * Immediatly before the response
         
+        io.getIo().emit("posts", { action: "create", post:post })
+
+
+    - In the front end, we created a logic that listen the post event and proccess the payload:
+        *In the useEffect or the ComponentDidMount() to React get the new data and update:
+
+        const socket = openSocket("http://localhost:8080");
+        
+        socket.on("posts", (data) => {
+            if (data.action === "create") {
+                this.addPost(data.post);
+            }
+        });

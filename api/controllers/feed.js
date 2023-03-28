@@ -3,6 +3,7 @@ const path = require("path");
 
 const { validationResult, Result } = require("express-validator");
 
+const io = require("../socket");
 const Post = require("../models/post");
 const User = require("../models/user");
 
@@ -61,6 +62,7 @@ exports.createPost = async (req, res, next) => {
     user.posts.push(post);
     await user.save();
 
+    io.getIo().emit("posts", { action: "create", post }); // We are sending the post data, in this 'data package', on the 'posts channel'
     res.status(201).json({
       message: "Post created successfully!",
       post: post,
@@ -118,7 +120,7 @@ exports.updatePost = async (req, res, next) => {
   }
 
   try {
-    const post = await Post.findById(postId);
+    const post = await Post.findById(postId).populate("creator");
 
     if (!post) {
       const error = new Error("Could not find post");
@@ -126,7 +128,7 @@ exports.updatePost = async (req, res, next) => {
       throw error;
     }
 
-    if (post.creator.toString() !== req.userId) {
+    if (post.creator._id.toString() !== req.userId) {
       const error = new Error("Not Authorized");
       error.statusCode = 403;
       throw error;
@@ -141,6 +143,7 @@ exports.updatePost = async (req, res, next) => {
 
     const savedPost = await post.save();
 
+    io.getIo().emit("posts", { action: "update", post: savedPost });
     res.status(200).json({ message: "Post Updated", post: savedPost });
   } catch (err) {
     if (!err.statusCode) {
