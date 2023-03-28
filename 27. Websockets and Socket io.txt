@@ -117,3 +117,13 @@
 
 416. Sorting Correctly
     - Used mongoose sort with the createdAt to sort correctely in the getPosts controller
+
+417. Deleting Posts Across Clients
+    - Create a logic to deletion, in the front end, it just reloaded the page
+
+418. Wrap Up
+    - Socket.io just makes working with websockets easy
+
+    - There are others implementations
+
+    * Remembering that we always need an http server to implement socket io
