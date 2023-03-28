@@ -114,3 +114,6 @@
                 this.addPost(data.post);
             }
         });
+
+416. Sorting Correctly
+    - Used mongoose sort with the createdAt to sort correctely in the getPosts controller
